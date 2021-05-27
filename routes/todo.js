@@ -82,4 +82,22 @@ router.get("/todo/:id", async (req, res) => {
   }
 });
 
+router.get("/todo", async (req, res) => {
+  const owner = req.body.userId;
+  if (!owner) {
+    return res.status(401).send("incomplete info ");
+  }
+  try {
+    const todo = await Todo.find({
+      owner,
+    });
+    if (!todo) {
+      return res.status(404).send("todo not found");
+    }
+    res.json(todo);
+  } catch (e) {
+    res.status(400).send(e.message);
+  }
+});
+
 module.exports = router;
