@@ -1,7 +1,11 @@
 ## install dependencies:
 `npm i`
 
-## Make sure you have the config/.env file  and provide Database url as(MONGOOSEURL) and the port as (PORT)
+## Make sure you have the config/.env file 
+
+# Environment variables
+MONGOOSEURL =
+port =
 
 
 ## start the server
