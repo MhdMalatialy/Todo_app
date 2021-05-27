@@ -1,13 +1,14 @@
 const express = require("express");
 const router = new express.Router();
 const Todo = require("../models/todo");
+const auth = require("../middleware/authentication");
 
 // Add new todo for specific user.
 
-router.post("/todo", async (req, res) => {
+router.post("/todo", auth, async (req, res) => {
   const todo = new Todo({
     information: req.body.info,
-    owner: req.body.userId,
+    owner: req.user._id,
   });
   try {
     await todo.save();
@@ -18,9 +19,9 @@ router.post("/todo", async (req, res) => {
 });
 
 //Update an existing todo for specific user.
-router.patch("/todo/:id", async (req, res) => {
+router.patch("/todo/:id", auth, async (req, res) => {
   const _id = req.params.id;
-  const owner = req.body.userId;
+  const owner = req.user._id;
   const info = req.body.info;
   if (!info || !_id || !owner) {
     return res.status(401).send("incomplete info");
@@ -41,9 +42,9 @@ router.patch("/todo/:id", async (req, res) => {
   }
 });
 
-router.delete("/todo/:id", async (req, res) => {
+router.delete("/todo/:id", auth, async (req, res) => {
   const _id = req.params.id;
-  const owner = req.body.userId;
+  const owner = req.user._id;
 
   if (!_id || !owner) {
     return res.status(401).send("incomplete info ");
@@ -62,8 +63,8 @@ router.delete("/todo/:id", async (req, res) => {
   }
 });
 
-router.get("/todo/:id", async (req, res) => {
-  const owner = req.body.userId;
+router.get("/todo/:id", auth, async (req, res) => {
+  const owner = req.user._id;
   const _id = req.params.id;
   if (!_id || !owner) {
     return res.status(401).send("incomplete info ");
@@ -82,8 +83,8 @@ router.get("/todo/:id", async (req, res) => {
   }
 });
 
-router.get("/todo", async (req, res) => {
-  const owner = req.body.userId;
+router.get("/todo", auth, async (req, res) => {
+  const owner = req.user._id;
   if (!owner) {
     return res.status(401).send("incomplete info ");
   }
